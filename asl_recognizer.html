@@ -13394,7 +13394,7 @@ OK
 
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>Number of states trained in model for BOOK is 3
-logL = -2331.1138127433196
+logL = -2331.1138127433237
 </pre>
 </div>
 </div>
@@ -13444,16 +13444,16 @@ logL = -2331.1138127433196
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>Number of states trained in model for BOOK is 3
 hidden state #0
+mean =  [ -1.12415027  69.44164191  17.02866283  77.7231196 ]
+variance =  [ 19.70434594  16.83041492  30.51552305  11.03678246]
+
+hidden state #1
 mean =  [ -11.45300909   94.109178     19.03512475  102.2030162 ]
 variance =  [  77.403668    203.35441965   26.68898447  156.12444034]
 
-hidden state #1
+hidden state #2
 mean =  [ -3.46504869  50.66686933  14.02391587  52.04731066]
 variance =  [ 49.12346305  43.04799144  39.35109609  47.24195772]
-
-hidden state #2
-mean =  [ -1.12415027  69.44164191  17.02866283  77.7231196 ]
-variance =  [ 19.70434594  16.83041492  30.51552305  11.03678246]
 
 </pre>
 </div>
@@ -15086,11 +15086,11 @@ Train fold indices:[0 1 2 3] Test fold indices:[4 5]
 <div class="prompt"></div>
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>Training complete for FISH with 11 states with time 0.6758825079996313 seconds
-Training complete for BOOK with 6 states with time 6.667286860999411 seconds
-Training complete for VEGETABLE with 2 states with time 2.9276977560002706 seconds
-Training complete for FUTURE with 2 states with time 6.258001613000488 seconds
-Training complete for JOHN with 12 states with time 67.61243965199992 seconds
+<pre>Training complete for FISH with 5 states with time 0.5853097449999041 seconds
+Training complete for BOOK with 6 states with time 6.435151228999985 seconds
+Training complete for VEGETABLE with 2 states with time 2.489541958000018 seconds
+Training complete for FUTURE with 2 states with time 6.034609117999935 seconds
+Training complete for JOHN with 12 states with time 63.246488838000005 seconds
 </pre>
 </div>
 </div>
@@ -15104,7 +15104,7 @@ Training complete for JOHN with 12 states with time 67.61243965199992 seconds
 <div class="prompt input_prompt">In&nbsp;[25]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">my_model_selectors</span> <span class="k">import</span> <span class="n">SelectorCV</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">my_model_selectors</span> <span class="k">import</span> <span class="n">SelectorBIC</span>
 
 <span class="n">training</span> <span class="o">=</span> <span class="n">asl</span><span class="o">.</span><span class="n">build_training</span><span class="p">(</span><span class="n">features_ground</span><span class="p">)</span>  <span class="c1"># Experiment here with different feature sets defined in part 1</span>
 <span class="n">sequences</span> <span class="o">=</span> <span class="n">training</span><span class="o">.</span><span class="n">get_all_sequences</span><span class="p">()</span>
@@ -15112,7 +15112,7 @@ Training complete for JOHN with 12 states with time 67.61243965199992 seconds
 
 <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">words_to_train</span><span class="p">:</span>
     <span class="n">start</span> <span class="o">=</span> <span class="n">timeit</span><span class="o">.</span><span class="n">default_timer</span><span class="p">()</span>
-    <span class="n">model</span> <span class="o">=</span> <span class="n">SelectorCV</span><span class="p">(</span><span class="n">sequences</span><span class="p">,</span> <span class="n">Xlengths</span><span class="p">,</span> <span class="n">word</span><span class="p">,</span> 
+    <span class="n">model</span> <span class="o">=</span> <span class="n">SelectorBIC</span><span class="p">(</span><span class="n">sequences</span><span class="p">,</span> <span class="n">Xlengths</span><span class="p">,</span> <span class="n">word</span><span class="p">,</span> 
                     <span class="n">min_n_components</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">max_n_components</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">random_state</span> <span class="o">=</span> <span class="mi">14</span><span class="p">)</span><span class="o">.</span><span class="n">select</span><span class="p">()</span>
     <span class="n">end</span> <span class="o">=</span> <span class="n">timeit</span><span class="o">.</span><span class="n">default_timer</span><span class="p">()</span><span class="o">-</span><span class="n">start</span>
     <span class="k">if</span> <span class="n">model</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -15133,11 +15133,11 @@ Training complete for JOHN with 12 states with time 67.61243965199992 seconds
 <div class="prompt"></div>
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>Training complete for FISH with 11 states with time 0.6684549500005232 seconds
-Training complete for BOOK with 6 states with time 6.585581278000063 seconds
-Training complete for VEGETABLE with 2 states with time 2.9068061440002566 seconds
-Training complete for FUTURE with 2 states with time 6.204932607000046 seconds
-Training complete for JOHN with 12 states with time 67.13389649500004 seconds
+<pre>Training complete for FISH with 3 states with time 0.592338922999943 seconds
+Training complete for BOOK with 3 states with time 3.4093161490000057 seconds
+Training complete for VEGETABLE with 3 states with time 1.194291764000127 seconds
+Training complete for FUTURE with 3 states with time 3.6236105790001147 seconds
+Training complete for JOHN with 3 states with time 34.493924146999916 seconds
 </pre>
 </div>
 </div>
@@ -15184,11 +15184,11 @@ Training complete for JOHN with 12 states with time 67.13389649500004 seconds
 <div class="prompt"></div>
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>Training complete for FISH with 3 states with time 1.4347522689995458 seconds
-Training complete for BOOK with 15 states with time 6.853916347999984 seconds
-Training complete for VEGETABLE with 15 states with time 5.567670936000468 seconds
-Training complete for FUTURE with 15 states with time 7.116400429999885 seconds
-Training complete for JOHN with 15 states with time 37.206935899999735 seconds
+<pre>Training complete for FISH with 5 states with time 0.5933714100001453 seconds
+Training complete for BOOK with 15 states with time 3.8441421140000784 seconds
+Training complete for VEGETABLE with 15 states with time 1.3066130729998804 seconds
+Training complete for FUTURE with 15 states with time 4.0036932770001386 seconds
+Training complete for JOHN with 15 states with time 38.182846275999964 seconds
 </pre>
 </div>
 </div>
@@ -15244,7 +15244,7 @@ The cross validation selectors usually selects the models with the less number o
 <div class="output_subarea output_stream output_stderr output_text">
 <pre>....
 ----------------------------------------------------------------------
-Ran 4 tests in 79.041s
+Ran 4 tests in 74.701s
 
 OK
 </pre>
@@ -15401,6 +15401,92 @@ Number of test set sentences: 40
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
+<div class="prompt input_prompt">In&nbsp;[31]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># TODO Choose a feature set and model selector</span>
+<span class="kn">from</span> <span class="nn">importlib</span> <span class="k">import</span> <span class="n">reload</span>
+<span class="kn">import</span> <span class="nn">my_recognizer</span>
+<span class="n">reload</span><span class="p">(</span><span class="n">my_recognizer</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">my_recognizer</span> <span class="k">import</span> <span class="n">recognize</span>
+
+<span class="n">features</span> <span class="o">=</span> <span class="n">features_custom</span> <span class="c1"># change as needed</span>
+<span class="n">model_selector</span> <span class="o">=</span> <span class="n">SelectorCV</span> <span class="c1"># change as needed</span>
+
+<span class="c1"># TODO Recognize the test set and display the result with the show_errors method</span>
+<span class="n">models</span> <span class="o">=</span> <span class="n">train_all_words</span><span class="p">(</span><span class="n">features</span><span class="p">,</span> <span class="n">model_selector</span><span class="p">)</span>
+<span class="n">test_set</span> <span class="o">=</span> <span class="n">asl</span><span class="o">.</span><span class="n">build_test</span><span class="p">(</span><span class="n">features</span><span class="p">)</span>
+<span class="n">probabilities</span><span class="p">,</span> <span class="n">guesses</span> <span class="o">=</span> <span class="n">recognize</span><span class="p">(</span><span class="n">models</span><span class="p">,</span> <span class="n">test_set</span><span class="p">)</span>
+<span class="n">show_errors</span><span class="p">(</span><span class="n">guesses</span><span class="p">,</span> <span class="n">test_set</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+<div class="prompt"></div>
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+**** WER = 0.5898876404494382
+Total correct: 73 out of 178
+Video  Recognized                                                    Correct
+=====================================================================================================
+    2: JOHN WRITE *ARRIVE                                            JOHN WRITE HOMEWORK
+    7: JOHN *HAVE *MARY *WHAT                                        JOHN CAN GO CAN
+   12: JOHN *CAR *WHAT CAN                                           JOHN CAN GO CAN
+   21: *IX *ARRIVE *JOHN *MARY *GIVE1 *CAR *VISIT *WHO               JOHN FISH WONT EAT BUT CAN EAT CHICKEN
+   25: *IX *IX IX IX IX                                              JOHN LIKE IX IX IX
+   28: *IX *IX IX IX IX                                              JOHN LIKE IX IX IX
+   30: *IX LIKE IX IX IX                                             JOHN LIKE IX IX IX
+   36: *VISIT *WHO *YESTERDAY *MARY *IX *JOHN                        MARY VEGETABLE KNOW IX LIKE CORN1
+   40: JOHN IX *PREFER *IX *IX                                       JOHN IX THINK MARY LOVE
+   43: JOHN *SHOULD BUY HOUSE                                        JOHN MUST BUY HOUSE
+   50: *JOHN *FRANK BUY CAR SHOULD                                   FUTURE JOHN BUY CAR SHOULD
+   54: JOHN SHOULD *WHO BUY HOUSE                                    JOHN SHOULD NOT BUY HOUSE
+   57: *IX *EAT VISIT *IX                                            JOHN DECIDE VISIT MARY
+   67: *LIKE *POSS NOT *ARRIVE HOUSE                                 JOHN FUTURE NOT BUY HOUSE
+   71: JOHN *FUTURE *BLAME MARY                                      JOHN WILL VISIT MARY
+   74: *IX *VISIT *MARY MARY                                         JOHN NOT VISIT MARY
+   77: *IX BLAME MARY                                                ANN BLAME MARY
+   84: *JOHN *ARRIVE *GO BOOK                                        IX-1P FIND SOMETHING-ONE BOOK
+   89: *WHO IX *SOMETHING-ONE *SOMETHING-ONE *SOMETHING-ONE *BOOK *BREAK-DOWN  JOHN IX GIVE MAN IX NEW COAT
+   90: JOHN *GIVE1 *SOMETHING-ONE *GIVE1 WOMAN *CHOCOLATE            JOHN GIVE IX SOMETHING-ONE WOMAN BOOK
+   92: JOHN *WOMAN *WOMAN *WOMAN *SOMETHING-ONE BOOK                 JOHN GIVE IX SOMETHING-ONE WOMAN BOOK
+  100: POSS NEW CAR BREAK-DOWN                                       POSS NEW CAR BREAK-DOWN
+  105: JOHN *SEE                                                     JOHN LEG
+  107: *LIKE *HAVE *HAVE *MARY *WHO                                  JOHN POSS FRIEND HAVE CANDY
+  108: *MARY *JOHN                                                   WOMAN ARRIVE
+  113: IX CAR *SOMETHING-ONE *JOHN *BOX                              IX CAR BLUE SUE BUY
+  119: *PREFER *BUY1 *HAVE *WHAT *POSS                               SUE BUY IX CAR BLUE
+  122: JOHN *HOUSE BOOK                                              JOHN READ BOOK
+  139: JOHN *BUY1 WHAT YESTERDAY *CHOCOLATE                          JOHN BUY WHAT YESTERDAY BOOK
+  142: JOHN *ARRIVE YESTERDAY *CAR BOOK                              JOHN BUY YESTERDAY WHAT BOOK
+  158: LOVE *MARY WHO                                                LOVE JOHN WHO
+  167: JOHN *VISIT *VISIT *GO MARY                                   JOHN IX SAY LOVE MARY
+  171: JOHN *VISIT BLAME                                             JOHN MARY BLAME
+  174: *GIVE1 *GIVE1 GIVE1 *GIRL *WHAT                               PEOPLE GROUP GIVE1 JANA TOY
+  181: *GO *BOX                                                      JOHN ARRIVE
+  184: *GIVE *GIVE *GIVE1 TEACHER APPLE                              ALL BOY GIVE TEACHER APPLE
+  189: JOHN *VISIT *PREFER BOX                                       JOHN GIVE GIRL BOX
+  193: JOHN *SOMETHING-ONE *YESTERDAY BOX                            JOHN GIVE GIRL BOX
+  199: *JOHN CHOCOLATE *TELL                                         LIKE CHOCOLATE WHO
+  201: JOHN *SHOULD *WOMAN *LOVE BUY HOUSE                           JOHN TELL MARY IX-1P BUY HOUSE
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
 <div class="prompt input_prompt">In&nbsp;[32]:</div>
 <div class="inner_cell">
     <div class="input_area">
@@ -15411,7 +15497,7 @@ Number of test set sentences: 40
 <span class="kn">from</span> <span class="nn">my_recognizer</span> <span class="k">import</span> <span class="n">recognize</span>
 
 <span class="n">features</span> <span class="o">=</span> <span class="n">features_custom</span> <span class="c1"># change as needed</span>
-<span class="n">model_selector</span> <span class="o">=</span> <span class="n">SelectorCV</span> <span class="c1"># change as needed</span>
+<span class="n">model_selector</span> <span class="o">=</span> <span class="n">SelectorBIC</span> <span class="c1"># change as needed</span>
 
 <span class="c1"># TODO Recognize the test set and display the result with the show_errors method</span>
 <span class="n">models</span> <span class="o">=</span> <span class="n">train_all_words</span><span class="p">(</span><span class="n">features</span><span class="p">,</span> <span class="n">model_selector</span><span class="p">)</span>
@@ -15433,49 +15519,49 @@ Number of test set sentences: 40
 
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>
-**** WER = 0.5955056179775281
-Total correct: 72 out of 178
+**** WER = 0.5786516853932584
+Total correct: 75 out of 178
 Video  Recognized                                                    Correct
 =====================================================================================================
-    2: JOHN WRITE *NEW                                               JOHN WRITE HOMEWORK
-    7: *MARY *PEOPLE *MARY *WHAT                                     JOHN CAN GO CAN
-   12: JOHN CAN *WHAT CAN                                            JOHN CAN GO CAN
-   21: *IX *VIDEOTAPE *VISIT *MARY *CAR *CAR EAT *EAT                JOHN FISH WONT EAT BUT CAN EAT CHICKEN
-   25: *IX LIKE IX *LIKE IX                                          JOHN LIKE IX IX IX
-   28: *IX LIKE IX *LIKE IX                                          JOHN LIKE IX IX IX
-   30: *LIKE LIKE *MARY *MARY *MARY                                  JOHN LIKE IX IX IX
-   36: MARY VEGETABLE *IX *GIVE *MARY *MARY                          MARY VEGETABLE KNOW IX LIKE CORN1
-   40: *MARY *GIVE *FUTURE1 MARY *MARY                               JOHN IX THINK MARY LOVE
-   43: *FRANK *SHOULD BUY HOUSE                                      JOHN MUST BUY HOUSE
-   50: *FRANK *FRANK BUY CAR *SOMETHING-ONE                          FUTURE JOHN BUY CAR SHOULD
-   54: JOHN SHOULD *SHOULD BUY HOUSE                                 JOHN SHOULD NOT BUY HOUSE
-   57: *MARY *JOHN *IX MARY                                          JOHN DECIDE VISIT MARY
+    2: *GO WRITE HOMEWORK                                            JOHN WRITE HOMEWORK
+    7: *SOMETHING-ONE *PEOPLE *MARY *WHAT                            JOHN CAN GO CAN
+   12: JOHN *HAVE *WHAT CAN                                          JOHN CAN GO CAN
+   21: JOHN *VIDEOTAPE *NEW *MARY *CAR *CAR *VISIT CHICKEN           JOHN FISH WONT EAT BUT CAN EAT CHICKEN
+   25: JOHN LIKE *MARY *LIKE IX                                      JOHN LIKE IX IX IX
+   28: JOHN LIKE *MARY *LIKE IX                                      JOHN LIKE IX IX IX
+   30: *IX LIKE IX *MARY IX                                          JOHN LIKE IX IX IX
+   36: MARY VEGETABLE *YESTERDAY *MARY *MARY *MARY                   MARY VEGETABLE KNOW IX LIKE CORN1
+   40: *MARY *MARY *CORN *VEGETABLE *IX                              JOHN IX THINK MARY LOVE
+   43: *FRANK *FUTURE BUY HOUSE                                      JOHN MUST BUY HOUSE
+   50: *FRANK *SEE BUY CAR *SOMETHING-ONE                            FUTURE JOHN BUY CAR SHOULD
+   54: JOHN SHOULD *FUTURE BUY HOUSE                                 JOHN SHOULD NOT BUY HOUSE
+   57: *MARY *JOHN *MARY *IX                                         JOHN DECIDE VISIT MARY
    67: *LIKE FUTURE NOT BUY HOUSE                                    JOHN FUTURE NOT BUY HOUSE
-   71: JOHN *FINISH *GIVE1 MARY                                      JOHN WILL VISIT MARY
-   74: *IX *WHO *MARY MARY                                           JOHN NOT VISIT MARY
-   77: *IX BLAME MARY                                                ANN BLAME MARY
-   84: *FRANK *ARRIVE *FUTURE BOOK                                   IX-1P FIND SOMETHING-ONE BOOK
-   89: *SHOULD *GIVE1 *SOMETHING-ONE *SOMETHING-ONE IX *NEW-YORK COAT  JOHN IX GIVE MAN IX NEW COAT
-   90: *SOMETHING-ONE *SOMETHING-ONE IX *IX WOMAN *CHOCOLATE         JOHN GIVE IX SOMETHING-ONE WOMAN BOOK
-   92: JOHN *IX IX *IX WOMAN BOOK                                    JOHN GIVE IX SOMETHING-ONE WOMAN BOOK
+   71: JOHN *FUTURE *GO MARY                                         JOHN WILL VISIT MARY
+   74: *IX *CORN *MARY *GO                                           JOHN NOT VISIT MARY
+   77: *JOHN BLAME MARY                                              ANN BLAME MARY
+   84: *JOHN *ARRIVE *HOMEWORK BOOK                                  IX-1P FIND SOMETHING-ONE BOOK
+   89: *SHOULD *POSS *IX *IX IX NEW *BREAK-DOWN                      JOHN IX GIVE MAN IX NEW COAT
+   90: *SOMETHING-ONE *GIVE1 IX *IX WOMAN BOOK                       JOHN GIVE IX SOMETHING-ONE WOMAN BOOK
+   92: JOHN *IX IX *IX *IX BOOK                                      JOHN GIVE IX SOMETHING-ONE WOMAN BOOK
   100: POSS NEW CAR BREAK-DOWN                                       POSS NEW CAR BREAK-DOWN
-  105: *FRANK *FRANK                                                 JOHN LEG
+  105: *FRANK *SEE                                                   JOHN LEG
   107: *LIKE *IX *HAVE *MARY *MARY                                   JOHN POSS FRIEND HAVE CANDY
-  108: *VISIT ARRIVE                                                 WOMAN ARRIVE
-  113: IX CAR *CAR *IX *ARRIVE                                       IX CAR BLUE SUE BUY
-  119: *VEGETABLE *BUY1 IX *HAVE *POSS                               SUE BUY IX CAR BLUE
-  122: JOHN *HOUSE *COAT                                             JOHN READ BOOK
-  139: *IX *BUY1 WHAT YESTERDAY BOOK                                 JOHN BUY WHAT YESTERDAY BOOK
-  142: *FRANK *VIDEOTAPE YESTERDAY WHAT BOOK                         JOHN BUY YESTERDAY WHAT BOOK
+  108: WOMAN *JOHN                                                   WOMAN ARRIVE
+  113: IX CAR *IX *IX *BOX                                           IX CAR BLUE SUE BUY
+  119: *PREFER *BUY1 IX *BLAME *IX                                   SUE BUY IX CAR BLUE
+  122: JOHN *GIVE1 BOOK                                              JOHN READ BOOK
+  139: JOHN *BUY1 *BOX YESTERDAY BOOK                                JOHN BUY WHAT YESTERDAY BOOK
+  142: *FRANK *NEW YESTERDAY WHAT BOOK                               JOHN BUY YESTERDAY WHAT BOOK
   158: LOVE *MARY WHO                                                LOVE JOHN WHO
-  167: *MARY IX *MARY LOVE MARY                                      JOHN IX SAY LOVE MARY
-  171: *SUE *SUE BLAME                                               JOHN MARY BLAME
-  174: *HAVE *GIVE3 GIVE1 *APPLE *WHAT                               PEOPLE GROUP GIVE1 JANA TOY
-  181: *VISIT ARRIVE                                                 JOHN ARRIVE
-  184: *IX *IX *GIVE1 TEACHER APPLE                                  ALL BOY GIVE TEACHER APPLE
-  189: *JANA *SOMETHING-ONE *CORN *ARRIVE                            JOHN GIVE GIRL BOX
-  193: *MARY *SOMETHING-ONE *YESTERDAY BOX                           JOHN GIVE GIRL BOX
-  199: *JOHN CHOCOLATE *TELL                                         LIKE CHOCOLATE WHO
+  167: *MARY IX *MARY LOVE *LOVE                                     JOHN IX SAY LOVE MARY
+  171: *MARY MARY BLAME                                              JOHN MARY BLAME
+  174: *ARRIVE *GIVE3 GIVE1 *GIVE *WHAT                              PEOPLE GROUP GIVE1 JANA TOY
+  181: *VISIT *BOX                                                   JOHN ARRIVE
+  184: *IX BOY *GIVE1 TEACHER APPLE                                  ALL BOY GIVE TEACHER APPLE
+  189: *JANA *SEE *GIVE BOX                                          JOHN GIVE GIRL BOX
+  193: JOHN *SOMETHING-ONE *YESTERDAY BOX                            JOHN GIVE GIRL BOX
+  199: *JOHN CHOCOLATE WHO                                           LIKE CHOCOLATE WHO
   201: JOHN *MAN *WOMAN *LOVE *ARRIVE HOUSE                          JOHN TELL MARY IX-1P BUY HOUSE
 </pre>
 </div>
@@ -15487,93 +15573,7 @@ Video  Recognized                                                    Correct
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[34]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># TODO Choose a feature set and model selector</span>
-<span class="kn">from</span> <span class="nn">importlib</span> <span class="k">import</span> <span class="n">reload</span>
-<span class="kn">import</span> <span class="nn">my_recognizer</span>
-<span class="n">reload</span><span class="p">(</span><span class="n">my_recognizer</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">my_recognizer</span> <span class="k">import</span> <span class="n">recognize</span>
-
-<span class="n">features</span> <span class="o">=</span> <span class="n">features_custom</span> <span class="c1"># change as needed</span>
-<span class="n">model_selector</span> <span class="o">=</span> <span class="n">SelectorCV</span> <span class="c1"># change as needed</span>
-
-<span class="c1"># TODO Recognize the test set and display the result with the show_errors method</span>
-<span class="n">models</span> <span class="o">=</span> <span class="n">train_all_words</span><span class="p">(</span><span class="n">features</span><span class="p">,</span> <span class="n">model_selector</span><span class="p">)</span>
-<span class="n">test_set</span> <span class="o">=</span> <span class="n">asl</span><span class="o">.</span><span class="n">build_test</span><span class="p">(</span><span class="n">features</span><span class="p">)</span>
-<span class="n">probabilities</span><span class="p">,</span> <span class="n">guesses</span> <span class="o">=</span> <span class="n">recognize</span><span class="p">(</span><span class="n">models</span><span class="p">,</span> <span class="n">test_set</span><span class="p">)</span>
-<span class="n">show_errors</span><span class="p">(</span><span class="n">guesses</span><span class="p">,</span> <span class="n">test_set</span><span class="p">)</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-<div class="prompt"></div>
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>
-**** WER = 0.5955056179775281
-Total correct: 72 out of 178
-Video  Recognized                                                    Correct
-=====================================================================================================
-    2: JOHN WRITE *NEW                                               JOHN WRITE HOMEWORK
-    7: *MARY *PEOPLE *MARY *WHAT                                     JOHN CAN GO CAN
-   12: JOHN CAN *WHAT CAN                                            JOHN CAN GO CAN
-   21: *IX *VIDEOTAPE *VISIT *MARY *CAR *CAR EAT *EAT                JOHN FISH WONT EAT BUT CAN EAT CHICKEN
-   25: *IX LIKE IX *LIKE IX                                          JOHN LIKE IX IX IX
-   28: *IX LIKE IX *LIKE IX                                          JOHN LIKE IX IX IX
-   30: *LIKE LIKE *MARY *MARY *MARY                                  JOHN LIKE IX IX IX
-   36: MARY VEGETABLE *IX *GIVE *MARY *MARY                          MARY VEGETABLE KNOW IX LIKE CORN1
-   40: *MARY *GIVE *FUTURE1 MARY *MARY                               JOHN IX THINK MARY LOVE
-   43: *FRANK *SHOULD BUY HOUSE                                      JOHN MUST BUY HOUSE
-   50: *FRANK *FRANK BUY CAR *SOMETHING-ONE                          FUTURE JOHN BUY CAR SHOULD
-   54: JOHN SHOULD *SHOULD BUY HOUSE                                 JOHN SHOULD NOT BUY HOUSE
-   57: *MARY *JOHN *IX MARY                                          JOHN DECIDE VISIT MARY
-   67: *LIKE FUTURE NOT BUY HOUSE                                    JOHN FUTURE NOT BUY HOUSE
-   71: JOHN *FINISH *GIVE1 MARY                                      JOHN WILL VISIT MARY
-   74: *IX *WHO *MARY MARY                                           JOHN NOT VISIT MARY
-   77: *IX BLAME MARY                                                ANN BLAME MARY
-   84: *FRANK *ARRIVE *FUTURE BOOK                                   IX-1P FIND SOMETHING-ONE BOOK
-   89: *SHOULD *GIVE1 *SOMETHING-ONE *SOMETHING-ONE IX *NEW-YORK COAT  JOHN IX GIVE MAN IX NEW COAT
-   90: *SOMETHING-ONE *SOMETHING-ONE IX *IX WOMAN *CHOCOLATE         JOHN GIVE IX SOMETHING-ONE WOMAN BOOK
-   92: JOHN *IX IX *IX WOMAN BOOK                                    JOHN GIVE IX SOMETHING-ONE WOMAN BOOK
-  100: POSS NEW CAR BREAK-DOWN                                       POSS NEW CAR BREAK-DOWN
-  105: *FRANK *FRANK                                                 JOHN LEG
-  107: *LIKE *IX *HAVE *MARY *MARY                                   JOHN POSS FRIEND HAVE CANDY
-  108: *VISIT ARRIVE                                                 WOMAN ARRIVE
-  113: IX CAR *CAR *IX *ARRIVE                                       IX CAR BLUE SUE BUY
-  119: *VEGETABLE *BUY1 IX *HAVE *POSS                               SUE BUY IX CAR BLUE
-  122: JOHN *HOUSE *COAT                                             JOHN READ BOOK
-  139: *IX *BUY1 WHAT YESTERDAY BOOK                                 JOHN BUY WHAT YESTERDAY BOOK
-  142: *FRANK *VIDEOTAPE YESTERDAY WHAT BOOK                         JOHN BUY YESTERDAY WHAT BOOK
-  158: LOVE *MARY WHO                                                LOVE JOHN WHO
-  167: *MARY IX *MARY LOVE MARY                                      JOHN IX SAY LOVE MARY
-  171: *SUE *SUE BLAME                                               JOHN MARY BLAME
-  174: *HAVE *GIVE3 GIVE1 *APPLE *WHAT                               PEOPLE GROUP GIVE1 JANA TOY
-  181: *VISIT ARRIVE                                                 JOHN ARRIVE
-  184: *IX *IX *GIVE1 TEACHER APPLE                                  ALL BOY GIVE TEACHER APPLE
-  189: *JANA *SOMETHING-ONE *CORN *ARRIVE                            JOHN GIVE GIRL BOX
-  193: *MARY *SOMETHING-ONE *YESTERDAY BOX                           JOHN GIVE GIRL BOX
-  199: *JOHN CHOCOLATE *TELL                                         LIKE CHOCOLATE WHO
-  201: JOHN *MAN *WOMAN *LOVE *ARRIVE HOUSE                          JOHN TELL MARY IX-1P BUY HOUSE
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[35]:</div>
+<div class="prompt input_prompt">In&nbsp;[33]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># TODO Choose a feature set and model selector</span>
@@ -15606,8 +15606,8 @@ Video  Recognized                                                    Correct
 
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>
-**** WER = 0.5112359550561798
-Total correct: 87 out of 178
+**** WER = 0.5
+Total correct: 89 out of 178
 Video  Recognized                                                    Correct
 =====================================================================================================
     2: JOHN WRITE *ARRIVE                                            JOHN WRITE HOMEWORK
@@ -15617,15 +15617,15 @@ Video  Recognized                                                    Correct
    25: JOHN *JOHN *LOVE IX IX                                        JOHN LIKE IX IX IX
    28: JOHN *MARY IX *JOHN IX                                        JOHN LIKE IX IX IX
    30: JOHN LIKE IX *MARY IX                                         JOHN LIKE IX IX IX
-   36: MARY *VISIT *IX *GIVE *MARY *MARY                             MARY VEGETABLE KNOW IX LIKE CORN1
-   40: *MARY *GIVE *GO MARY *IX                                      JOHN IX THINK MARY LOVE
+   36: MARY *VISIT *GIVE *GO *MARY *MARY                             MARY VEGETABLE KNOW IX LIKE CORN1
+   40: *MARY IX *GIVE MARY *IX                                       JOHN IX THINK MARY LOVE
    43: JOHN *FUTURE BUY HOUSE                                        JOHN MUST BUY HOUSE
    50: *JOHN JOHN BUY CAR *JOHN                                      FUTURE JOHN BUY CAR SHOULD
    54: JOHN SHOULD NOT BUY HOUSE                                     JOHN SHOULD NOT BUY HOUSE
-   57: *IX *MARY *GIVE *IX                                           JOHN DECIDE VISIT MARY
+   57: *IX *MARY VISIT *IX                                           JOHN DECIDE VISIT MARY
    67: JOHN FUTURE *MARY BUY HOUSE                                   JOHN FUTURE NOT BUY HOUSE
    71: JOHN *FUTURE *GIVE1 MARY                                      JOHN WILL VISIT MARY
-   74: *IX *VISIT *GIVE MARY                                         JOHN NOT VISIT MARY
+   74: *IX *VISIT *IX MARY                                           JOHN NOT VISIT MARY
    77: *JOHN BLAME MARY                                              ANN BLAME MARY
    84: *JOHN *JOHN *VISIT BOOK                                       IX-1P FIND SOMETHING-ONE BOOK
    89: *MARY *POSS *IX *IX IX *ARRIVE *BREAK-DOWN                    JOHN IX GIVE MAN IX NEW COAT
@@ -15636,18 +15636,18 @@ Video  Recognized                                                    Correct
   107: JOHN *JOHN *JOHN *IX *JOHN                                    JOHN POSS FRIEND HAVE CANDY
   108: *IX *HOMEWORK                                                 WOMAN ARRIVE
   113: IX CAR *IX *IX *BOX                                           IX CAR BLUE SUE BUY
-  119: *MARY *BUY1 IX *JOHN *JOHN                                    SUE BUY IX CAR BLUE
+  119: *MARY *BUY1 IX *BLAME *JOHN                                   SUE BUY IX CAR BLUE
   122: JOHN *GIVE1 BOOK                                              JOHN READ BOOK
-  139: JOHN *BUY1 WHAT *JOHN BOOK                                    JOHN BUY WHAT YESTERDAY BOOK
+  139: JOHN *ARRIVE WHAT *JOHN BOOK                                  JOHN BUY WHAT YESTERDAY BOOK
   142: JOHN BUY YESTERDAY WHAT BOOK                                  JOHN BUY YESTERDAY WHAT BOOK
   158: LOVE JOHN WHO                                                 LOVE JOHN WHO
   167: JOHN IX *VISIT LOVE MARY                                      JOHN IX SAY LOVE MARY
   171: JOHN MARY BLAME                                               JOHN MARY BLAME
-  174: *JOHN *GIVE1 GIVE1 *VISIT *WHAT                               PEOPLE GROUP GIVE1 JANA TOY
+  174: *JOHN *GIVE1 GIVE1 *GIVE *WHAT                                PEOPLE GROUP GIVE1 JANA TOY
   181: JOHN *BOX                                                     JOHN ARRIVE
-  184: *IX BOY *GIVE1 TEACHER *GO                                    ALL BOY GIVE TEACHER APPLE
-  189: *MARY *GO *VISIT BOX                                          JOHN GIVE GIRL BOX
-  193: JOHN *IX *VISIT BOX                                           JOHN GIVE GIRL BOX
+  184: *IX BOY *GIVE1 TEACHER *GIVE                                  ALL BOY GIVE TEACHER APPLE
+  189: *MARY *GO *GIVE BOX                                           JOHN GIVE GIRL BOX
+  193: JOHN *IX *GIVE BOX                                            JOHN GIVE GIRL BOX
   199: *JOHN *ARRIVE *MARY                                           LIKE CHOCOLATE WHO
   201: JOHN *MARY *LOVE *JOHN BUY HOUSE                              JOHN TELL MARY IX-1P BUY HOUSE
 </pre>
@@ -15664,8 +15664,8 @@ Video  Recognized                                                    Correct
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><strong>Question 3:</strong>  Summarize the error results from three combinations of features and model selectors.  What was the "best" combination and why?  What additional information might we use to improve our WER?  For more insight on improving WER, take a look at the introduction to Part 4.</p>
-<p><strong>Answer 3:</strong> features_ground with selectorCV gives the best WER of 0.59 features_ground with selectorBIC gives WER of 0.55 features_polar with selectorBIC gives WER of 0.54 features_polar with selectorDIC gives WER of 0.556 features_polar with selectorCV 0.517 features_delta with selectorDIC gives WER of 0.65 my features_custom with selctor BIC (delta polar) givers WER of 0.60
-The best combination is using fatures_polar both with selectorCV and selectorBIC. But selectorBIC is giving better results than selectorCV using features_ground. The delta features doesn't achieve any improved performance.
+<p><strong>Answer 3:</strong> features_ground with selectorCV gives the best WER of 0.59 features_ground with selectorBIC gives WER of 0.57 features_polar with selectorBIC gives WER of 0.54 features_polar with selectorDIC gives WER of 0.5 features_polar with selectorCV 0.517 features_delta with selectorDIC gives WER of 0.65 my features_custom with selctor BIC (delta polar) givers WER of 0.60
+The best combination is using features_polar both with selectorCV and selectorBIC. But selectorBIC is giving better results than selectorCV using features_ground. The delta features doesn't achieve any improved performance.
 Results could maybe improved by providing a feature set combining all the features tested. But the most promising improvement is by the way the method proposed in part 4 by using a statistical language model where the likelyhood of a word being adjacent to another is taken into account.</p>
 
 </div>
@@ -15684,7 +15684,7 @@ Results could maybe improved by providing a feature set combining all the featur
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[36]:</div>
+<div class="prompt input_prompt">In&nbsp;[34]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">asl_test_recognizer</span> <span class="k">import</span> <span class="n">TestRecognize</span>
@@ -15706,7 +15706,7 @@ Results could maybe improved by providing a feature set combining all the featur
 <div class="output_subarea output_stream output_stderr output_text">
 <pre>..
 ----------------------------------------------------------------------
-Ran 2 tests in 45.735s
+Ran 2 tests in 44.760s
 
 OK
 </pre>
@@ -15714,7 +15714,7 @@ OK
 </div>
 
 <div class="output_area">
-<div class="prompt output_prompt">Out[36]:</div>
+<div class="prompt output_prompt">Out[34]:</div>
 
 
 
@@ -15748,7 +15748,7 @@ Good luck!  Share your results with the class!</p>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[37]:</div>
+<div class="prompt input_prompt">In&nbsp;[35]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># create a DataFrame of log likelihoods for the test word items</span>
@@ -15765,7 +15765,7 @@ Good luck!  Share your results with the class!</p>
 
 
 <div class="output_area">
-<div class="prompt output_prompt">Out[37]:</div>
+<div class="prompt output_prompt">Out[35]:</div>
 
 
 <div class="output_html rendered_html output_subarea output_execute_result">
@@ -15801,14 +15801,14 @@ Good luck!  Share your results with the class!</p>
     <tr>
       <th>0</th>
       <td>-7790.259239</td>
-      <td>-5.957571e+05</td>
+      <td>-3.212423e+05</td>
       <td>-12110.621405</td>
       <td>-1183.385339</td>
-      <td>-36423.988817</td>
-      <td>-860.716604</td>
+      <td>-8872.592627</td>
+      <td>-908.703275</td>
       <td>-17045.140182</td>
-      <td>-2034.632971</td>
-      <td>-25315.947838</td>
+      <td>-1890.416690</td>
+      <td>-11879.432457</td>
       <td>-1824.389303</td>
       <td>...</td>
       <td>-14752.968639</td>
@@ -15828,11 +15828,11 @@ Good luck!  Share your results with the class!</p>
       <td>-5.846085e+05</td>
       <td>-140625.177415</td>
       <td>-397.741089</td>
-      <td>-244077.146131</td>
-      <td>-717.184940</td>
+      <td>-78346.024111</td>
+      <td>-756.940708</td>
       <td>-15397.830503</td>
-      <td>-406.121186</td>
-      <td>-10045.790945</td>
+      <td>-471.060317</td>
+      <td>-5200.491882</td>
       <td>-1464.585934</td>
       <td>...</td>
       <td>-1807.155594</td>
@@ -15849,14 +15849,14 @@ Good luck!  Share your results with the class!</p>
     <tr>
       <th>2</th>
       <td>-28738.467917</td>
-      <td>-2.449046e+06</td>
+      <td>-1.838663e+06</td>
       <td>-226359.431427</td>
       <td>-898.878868</td>
-      <td>-348851.646400</td>
-      <td>-1625.509508</td>
+      <td>-104955.794521</td>
+      <td>-2380.283714</td>
       <td>-33873.612424</td>
-      <td>-1914.974757</td>
-      <td>-13839.995241</td>
+      <td>-2185.128821</td>
+      <td>-11562.652683</td>
       <td>-2845.192870</td>
       <td>...</td>
       <td>-6832.782307</td>
@@ -15873,14 +15873,14 @@ Good luck!  Share your results with the class!</p>
     <tr>
       <th>3</th>
       <td>-7906.024622</td>
-      <td>-5.542524e+06</td>
+      <td>-4.855370e+06</td>
       <td>-7353.667972</td>
       <td>-887.213761</td>
-      <td>-5188.746595</td>
-      <td>-2859.217001</td>
+      <td>-3452.862518</td>
+      <td>-1039.837691</td>
       <td>-4185.934075</td>
-      <td>-5039.675276</td>
-      <td>-118971.409054</td>
+      <td>-4009.788747</td>
+      <td>-19620.331973</td>
       <td>-2121.954754</td>
       <td>...</td>
       <td>-16046.354572</td>
@@ -15897,13 +15897,13 @@ Good luck!  Share your results with the class!</p>
     <tr>
       <th>4</th>
       <td>-6183.482669</td>
-      <td>-2.657089e+06</td>
+      <td>-2.228587e+06</td>
       <td>-26070.359175</td>
       <td>-279.697385</td>
-      <td>-44879.757657</td>
-      <td>-243.732660</td>
+      <td>-26671.854329</td>
+      <td>-210.054500</td>
       <td>-705.832187</td>
-      <td>-426.665295</td>
+      <td>-412.498937</td>
       <td>-3936.258499</td>
       <td>-206.281575</td>
       <td>...</td>
