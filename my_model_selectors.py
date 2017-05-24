@@ -36,29 +36,15 @@ class ModelSelector(object):
         warnings.filterwarnings("ignore", category=DeprecationWarning)
         # warnings.filterwarnings("ignore", category=RuntimeWarning)
         try:
-            model = self.compute_model(num_states)
+            hmm_model = GaussianHMM(n_components=num_states, covariance_type="diag", n_iter=1000,
+                                    random_state=self.random_state, verbose=False).fit(self.X, self.lengths)
             if self.verbose:
-                fmt = 'model created for {} with {} states'
-                print(fmt.format(self.this_word, num_states))
-            return model
+                print("model created for {} with {} states".format(self.this_word, num_states))
+            return hmm_model
         except:
             if self.verbose:
-                fmt = 'failure on {} with {} states'
-                print(fmt.format(self.this_word, num_states))
+                print("failure on {} with {} states".format(self.this_word, num_states))
             return None
-
-    def compute_model(self, n):
-        '''Computes a GaussianHMM model.
-        :param n
-            The number of components.
-        '''
-        return GaussianHMM(
-            n_components=n,
-            covariance_type="diag",
-            n_iter=1000,
-            random_state=self.random_state,
-            verbose=False
-        ).fit(self.X, self.lengths)
 
 
 class SelectorConstant(ModelSelector):
@@ -74,173 +60,209 @@ class SelectorConstant(ModelSelector):
 
 
 class SelectorBIC(ModelSelector):
-    '''Select the model with the lowest Baysian Information Criterion(BIC) score
+    """ select the model with the lowest Baysian Information Criterion(BIC) score
     http://www2.imm.dtu.dk/courses/02433/doc/ch6_slides.pdf
     Bayesian information criteria: BIC = -2 * logL + p * logN
-    '''
+    """
 
     def select(self):
         """ select the best model for self.this_word based on
         BIC score for n between self.min_n_components and self.max_n_components
         :return: GaussianHMM object
+        
+        
+        p: number of parameters ( p = n_components  : is number of states in HMM)
         """
-        results = self.compute_for_all_n()
-        if not results:
-            return None
-        results = [(self.compute_bic(n,l), m) for n, l, m in results]
-        _, model = min(results, key=lambda x: x[0])
-        return model
-
-    def compute_for_all_n(self):
-        '''Computes the model and log likelihood for all combinations of
-        components.
-        :return
-            A list of tuples of the form (n, logL), where n is the number
-            of components used to train the model, and logL is the log
-            likelihood for the given model.
-        '''
         warnings.filterwarnings("ignore", category=DeprecationWarning)
-        results = []
-        for n in range(self.min_n_components, self.max_n_components+1):
-            model = self.base_model(n)
-            if not model: continue
+
+        # TODO implement model selection based on BIC scores
+        
+        # list of BIC score
+        list_scores = []
+        
+        # list of number states in HMM
+        list_num_hidden_states = []
+        
+        #num_features = len(self.X[0])
+        num_features = self.X.shape[1]
+        
+        for num_hidden_states in range(self.min_n_components, self.max_n_components+1):
             try:
-                logl = model.score(self.X, self.lengths)
+                model = self.base_model(num_hidden_states)
+                logL = model.score(self.X, self.lengths)
+                
+                
+                ''' GaussianHMM
+                source : https://en.wikipedia.org/wiki/Hidden_Markov_model#Architecture
+                GaussianHMM(n_components=num_states, covariance_type="diag", n_iter=1000, 
+                random_state=self.random_state, verbose=False).fit(self.X, self.lengths).
+                
+                From hmmlearn, calculating the following parameters that are used in BIC
+                
+                p is the number of model parameters in the test.
+                 https://discussions.udacity.com/t/number-of-parameters-bic-calculation/233235/4
+                Initial state occupation probabilities = numStates
+                Transition probabilities = numStates*(numStates - 1)
+                Emission probabilities = numStates*numFeatures*2 = numMeans+numCovars
+                Parameters = Initial state occupation probabilities + Transition probabilities + Emission probabilities
+                '''
+                
+                initial_state_occupation_probabilities = num_hidden_states
+                transition_probabilities = num_hidden_states * (num_hidden_states - 1)
+                emission_probabilities = num_hidden_states * num_features * 2
+                
+                p = initial_state_occupation_probabilities + transition_probabilities + emission_probabilities
+                
+                bic = -2 * logL + p * np.log(N)
+                
+                list_scores.append(bic)
+                list_num_hidden_states.append(num_hidden_states)
+                
             except:
-                continue
-            results.append((n, logl, model))
-        return results
-
-    def compute_bic(self, n, logl):
-        '''Computes the Bayesian Information Criterion (BIC) score given n and
-        the log likelihood.
-        '''
-        return (-2*logl) + (self.compute_free_param(n)*np.log2(n))
-
-    def compute_free_param(self, n):
-        '''Computes the number of free paramters for a model of n components.
-        :param n
-            The number of components.
-        :return
-            The total number of free parameters.
-        '''
-        return n**2 + 2*len(self.X[0])*n - 1
+                # eliminate non-viable models from consideration
+                pass
+          
+        if list_scores:
+            best_num_hidden_states = list_num_hidden_states[np.argmin(list_scores)] 
+        else:
+            best_num_hidden_states = self.n_constant
+            
+        #best_num_states = list_num_states[np.argmin(list_scores)] if list_scores else self.n_constant
+        
+        #print("[SelectorBIC] Result model n_compents: {}".format(best_num_hidden_states))
+        
+        return self.base_model(best_num_hidden_states)           
+        #raise NotImplementedError
 
 
 class SelectorDIC(ModelSelector):
-    '''Select best model based on Discriminative Information Criterion
-    Biem, Alain. "A model selection criterion for classification: Application to
-    hmm topology optimization." Document Analysis and Recognition, 2003.
-    Proceedings. Seventh International Conference on. IEEE, 2003.
+    ''' select best model based on Discriminative Information Criterion
+    Biem, Alain. "A model selection criterion for classification: Application to hmm topology optimization."
+    Document Analysis and Recognition, 2003. Proceedings. Seventh International Conference on. IEEE, 2003.
     http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.58.6208&rep=rep1&type=pdf
     DIC = log(P(X(i)) - 1/(M-1)SUM(log(P(X(all but i))
     '''
 
+    '''
+    Note:
+        self.words = all_word_sequences
+        self.sequences = all_word_sequences[this_word]
+        i.e  self.sequences = self.words[this_word]
+        
+        self.hwords = all_word_Xlengths
+        self.X, self.lengths = all_word_Xlengths[this_word]
+        i.e self.X, self.lengths = self.hwords[this_word]
+    '''
     def select(self):
-        results = self.compute_for_all_n()
-        if not results:
-            return None
-        _, model = max(results, key=lambda x: x[0])
-        return model
-
-    def compute_for_all_n(self):
-        '''Computes the DIC for all components.
-        :return
-            A list of tuples of the form (DIC, model).
-        '''
         warnings.filterwarnings("ignore", category=DeprecationWarning)
-        results = []
-        other_words = set(self.hwords.keys())
-        other_words.remove(self.this_word)
-        for n in range(self.min_n_components, self.max_n_components+1):
-            model = self.base_model(n)
-            if not model: continue
-            try:
-                logl = model.score(self.X, self.lengths)
-                log_other = self.compute_log_other(model, other_words)
-                if not log_other: continue
-            except:
-                continue
-            results.append((logl-log_other, model))
-        return results
 
-    def compute_log_other(self, model, words):
-        '''Compute the average log likelihood of the other words.'''
-        if not model or not words:
-            return None
-        total = 0
-        log_other = 0.0
-        for w in words:
-            xo, lo = self.hwords[w]
+        # TODO implement model selection based on DIC scores
+
+        # list of number states in HMM
+        list_num_hidden_states = []
+        
+        list_scores = []
+        
+        for num_hidden_states in range(self.min_n_components, self.max_n_components+1):
             try:
-                log_other += model.score(xo, lo)
-                total += 1
+                model = self.base_model(num_hidden_states)
+                logL = model.score(self.X, self.lengths)
+                
+                # calculate average score over all the other words other than the current word
+                sum_logL = 0
+                K = 0
+                
+                for word in self.words:
+                    if word != self.this_word:
+                        other_word_X, other_word_lengths = self.hwords[word]
+                        try:
+                            sum_logL += hmm_model.score(other_word_X, other_word_lengths)
+                            K += 1
+                            
+                        except:
+                            pass
+                
+                if K > 0:
+                    average_logL = sum_logL/K
+                else:
+                    average_logL = 0
+                    
+                #calculate the total score
+                dic = logL - average_logL
+
+                list_scores.append(dic)
+                list_num_hidden_states.append(num_hidden_states)
+                
             except:
-                continue
-        return log_other / total
+                # eliminate non-viable models from consideration
+                pass
+            
+            
+        M = len(list_num_hidden_states) # length of list of number of hidden states
+        if M > 2:
+            best_num_hidden_states = list_num_hidden_states[np.argmax(list_scores)]
+            
+        elif M == 2:
+            best_num_hidden_states = list_num_hidden_states[0]
+            
+        else:
+            best_num_hidden_states = self.n_constant
+            
+        #print("[SelectorDIC] Result model n_compents: {}".format(best_num_hidden_states))
+        return self.base_model(best_num_hidden_states) 
+        #raise NotImplementedError
 
 
 class SelectorCV(ModelSelector):
-    '''Select best model based on average log Likelihood of cross-validation
-    folds.
+    ''' select best model based on average log Likelihood of cross-validation folds
     '''
-
+    
     def select(self):
-        '''Selects cross-validated model with best log likelihood result.'''
-        results = self.compute_for_all_n()
-        if not results:
-            return None
-        n, _ = max(results, key=lambda x: x[1])
-        return self.base_model(n)
-
-    def compute_for_all_n(self):
-        '''Computes the model and log likelihood for all combinations of
-        components.
-        :return
-            A list of tuples of the form (n, logL), where n is the number
-            of components used to train the model, and logL is the log
-            likelihood for the given model.
-        '''
         warnings.filterwarnings("ignore", category=DeprecationWarning)
-        # Save values to restore before returning
-        cross_n_results = []
-        len_sequence = len(self.sequences)
-        if len_sequence <= 1:
-            for n in range(self.min_n_components, self.max_n_components+1):
-                list_logl = []  # list of cross validation scores obtained
-                model = self.base_model(n)
-                if not model:
-                    continue
-                try:
-                    logl = model.score(self.X, self.lengths)
-                except:
-                    continue
-                list_logl.append(logl)
 
-                if list_logl:
-                    avg_logl = np.mean(list_logl)
-                    cross_n_results.append((n, avg_logl))
-            return cross_n_results
-
-        save_x, save_lens = self.X, self.lengths
-        for n in range(self.min_n_components, self.max_n_components+1):
-            split_method = KFold(len_sequence if len_sequence<3  else 3)
-            list_logl = []  # list of cross validation scores obtained
-
-            for train_idx, test_idx in split_method.split(self.sequences):
-                self.X, self.lengths = combine_sequences(train_idx, self.sequences)
-                model = self.base_model(n)
-                if not model: continue
-                test_x, test_len = combine_sequences(test_idx, self.sequences)
-                try:
-                    logl = model.score(test_x, test_len)
-                except:
-                    continue
-                list_logl.append(logl)
-
-            if list_logl:
-                avg_logl = np.mean(list_logl)
-                cross_n_results.append((n, avg_logl))
-        # Restore values
-        self.X, self.lengths = save_x, save_lens
-        return cross_n_results
+        # TODO implement model selection using CV
+        # n_components : is number of hidden states in HMM
+        
+        split_method = KFold()
+        
+        # list of mean score of each Cross-Validation
+        list_scores = []
+        
+        # list of number states in HMM
+        list_num_hidden_states = []
+        
+        for num_hidden_states in range(self.min_n_components, self.max_n_components+1):
+            try:
+                if len(self.sequences) > 2: # Check if there are enough data to split
+                    scores = []
+                    for cv_train_idx, cv_test_idx in split_method.split(self.sequences):
+                        # training sequences
+                        self.X, self.lengths =  combine_sequences(cv_train_idx, self.sequences)
+                        # testing sequences
+                        test_X, test_lengths =  combine_sequences(cv_test_idx, self.sequences)
+            
+                        model = self.base_model(num_hidden_states)
+                        scores.append(model.score(test_X, test_lengths))
+   
+                    list_scores.append(np.mean(scores))
+                
+                else:
+                    model = self.base_model(num_hidden_states)
+                    list_scores.append(model.score(self.X, self.lengths))
+                    
+                list_num_hidden_states.append(num_hidden_states)
+                
+            except:
+                # eliminate non-viable models from consideration
+                pass
+            
+        if list_scores:
+            best_num_hidden_states = list_num_hidden_states[np.argmax(list_scores)] 
+        else:
+            best_num_hidden_states = self.n_constant
+            
+        #best_num_states = list_num_hidden_states[np.argmax(list_scores)] if list_scores else self.n_constant
+        
+        #print("[SelectorCV] Result model n_compents: {}".format(best_num_hidden_states))
+        
+        return self.base_model(best_num_hidden_states)
